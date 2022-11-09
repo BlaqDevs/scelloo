@@ -72,6 +72,11 @@ export default {
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
           success: colors.green.accent3,
+          active: '#e6e6f2',
+          inactive:'#f2f0f9',
+          paid:'#CDFFCD',
+          unpaid:'#FFECCC',
+          overdue:'#FFE0E0'
         }
       },
     },

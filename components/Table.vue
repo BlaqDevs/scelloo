@@ -1,17 +1,16 @@
 <template>
   <v-data-table
     color="primary"
-    :headers="dessertHeaders"
+    :headers="headers"
     v-model="selected"
     show-select
     :search="search"
     checkbox-color="primary"
     :single-select="singleSelect"
-    :items="desserts"
-    :single-expand="singleExpand"
+    :items="users"
+    single-expand=true
     :expanded.sync="expanded"
-    item-key="name"
-    @item-expanded='itemExpanded'
+    item-key="firstName"
     show-expand
     class="elevation-1"
   >
@@ -78,20 +77,13 @@
             </v-radio-group>
           </v-list>
         </v-menu>
-        <v-text-field
-          class="mt-5 ml-5"
-          filled
-          solo-inverted
-          dense
-          flat
-        >
-        <template #prepend-inner>
-           <v-icon color="" left>mdi-magnify</v-icon>
-          
-        </template>
-        <template #label>
-<p class="text-caption">Search Users by Name, Email or Date</p>
-        </template>
+        <v-text-field class="mt-5 ml-5" filled solo-inverted dense flat>
+          <template #prepend-inner>
+            <v-icon color="" left>mdi-magnify</v-icon>
+          </template>
+          <template #label>
+            <p class="text-caption">Search Users by Name, Email or Date</p>
+          </template>
         </v-text-field>
         <v-spacer></v-spacer>
 
@@ -99,85 +91,80 @@
       </v-toolbar>
       <v-divider class=""></v-divider>
     </template>
-    <template v-slot:item.userstatus={item}>
+    <template v-slot:item.name="{ item }">
+      {{item.firstName}} {{item.lastName}}
+    </template>
+    <template v-slot:item.userstatus="{ item }">
       <div class="py-3">
-         <v-chip
-            class="primary--text "
-            small
-            color="#e6e6f2"
-            
-          >
-            <v-icon color="" large>mdi-circle-small</v-icon>
-            Active
-          </v-chip><br>
-        <span class="text-caption">Last login: 12/APR/2022</span> 
+        <v-chip :class="item.userStatus" small :color="item.userStatus">
+          <v-icon  large>mdi-circle-small</v-icon>
+          {{item.userStatus}} </v-chip
+        ><br />
+        <span class="text-caption">Last login: {{item.lastLogin}}</span>
       </div>
-      
     </template>
-    <template v-slot:item.paystatus={item}>
+    <template v-slot:item.paystatus="{ item }">
       <div class="py-3">
-         <v-chip
-            class="green--text "
-            small
-            color="#cdffcd"
-            
-          >
-            <v-icon color="" large>mdi-circle-small</v-icon>
-            Paid
-          </v-chip><br>
-        <span class="text-caption">Paid On: 12/APR/2022</span> 
+        <v-chip :class="item.paymentStatus" small :color="item.paymentStatus">
+          <v-icon color="" large>mdi-circle-small</v-icon>
+          {{item.paymentStatus}} </v-chip
+        ><br />
+        <span class="text-caption">Paid On: {{item.paidOn}}</span>
       </div>
-      
     </template>
-    <template v-slot:item.viewmore={item}>
+    <template v-slot:item.viewmore="{ item }">
       <div class="py-3">
-        
-        <span class="text-caption">View More</span> 
+        <span class="text-caption">View More</span>
       </div>
-      
     </template>
-    <template v-slot:item.menu={item}>
-       <v-icon color="">mdi-dots-vertical</v-icon>
-      
-      
+    <template v-slot:item.menu="{ item }">
+      <v-menu :rounded="rounded" offset-y :close-on-content-click="false">
+        <template v-slot:activator="{ on, attrs }">
+          <v-icon v-bind="attrs" v-on="on" color="">mdi-dots-vertical</v-icon>
+        </template>
+        <v-list class="text-subtitle-1" height="129px" width="154px">
+          <v-list-item class="mt-n2"> Edit </v-list-item>
+          <v-list-item class="mt-n5"> View Profile </v-list-item>
+          <v-list-item class="mt-n5 success--text"> Activate User </v-list-item>
+          <v-list-item class="mt-n5 red--text"> Delete </v-list-item>
+        </v-list>
+      </v-menu>
     </template>
-    <template v-slot:header.menu={header}>
-       <v-icon color="">mdi-dots-vertical</v-icon>
-      
-      
+    <template v-slot:header.menu="{ header }">
+      <v-icon color="">mdi-dots-vertical</v-icon>
+      <!-- {{users}} -->
     </template>
 
     <template v-slot:expanded-item="{ headers, item }">
-      <td style="background-color:#F4F2FF" :colspan="headers.length" >
-        <v-simple-table style="background-color:#F4F2FF">
-    <template v-slot:default>
-      <thead>
-        <tr>
-          <th class="text-left">
-            DATE
-          </th>
-          <th class="text-left">
-            USER ACTIVITY
-          </th>
-          <th class="text-left">
-            DETAIL  <v-icon color="" small> mdi-information-outline</v-icon>
-            
-          </th>
-         
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="item in desserts"
-          :key="item.name"
-        >
-          <td>{{ item.name }}</td>
-          <td>{{ item.calories }}</td>
-        </tr>
-      </tbody>
-    </template>
-  </v-simple-table></td>
-      
+      <td  style="background-color: #f4f2ff" :colspan="headers.length" class="px-5">
+        <v-simple-table v-if="item.activities != null" style="background-color: #f4f2ff" class="mx-5">
+          <template v-slot:default>
+            <thead>
+              <tr>
+                <th class="text-left">DATE</th>
+                <th class="text-left">USER ACTIVITY</th>
+                <th class="text-left">
+                  DETAIL
+                  <v-icon color="" small> mdi-information-outline</v-icon>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="i in item.activities" :key="i">
+                <td>{{ i.date }}</td>
+                <td>{{i.userActivity }}</td>
+                <td>{{i.details }}</td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
+        <v-row v-else class="mx-auto my-5 accent--text" justify='center'>
+ <div >
+        <h3 >NO RECORDS FOUND</h3>
+        </div>
+        </v-row>
+       
+      </td>
     </template>
   </v-data-table>
 </template>
@@ -187,12 +174,17 @@ export default {
     return {
       expanded:[
       ],
+      sortUser:'all',
       singleSelect: false,
       selected: [],
+      users:[],
+      paidUsers:[],
+      unpaidUsers:[],
+      dueausers:[],
       search: '',
       singleExpand: true,
       sort: '',
-      dessertHeaders: [
+      headers: [
         {
           text: '',
           align: 'start',
@@ -206,67 +198,129 @@ export default {
         },
         { text: 'USER STATUS', value: 'userstatus' },
         { text: 'PAYMENT STATUS', value: 'paystatus' },
-        { text: 'AMOUNT (g)',align:'center', value: 'carbs' },
+        { text: 'AMOUNT (g)',align:'center', value: 'amountInCents' },
         { text: '', value: 'viewmore' },
         { text: '', value: 'menu' },
       ],
       desserts: [
-        {
-          name: 'PAYMENT STSTUS',
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-          iron: '1%',
-        },
-        {
-          name: 'AMOUNT',
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-          iron: '1%',
-        },
-        {
-          name: '',
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0,
-          iron: 'view more',
-        },
-        {
-          name: 'menu',
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3,
-          iron: '8%',
-        },
-       
-        {
-          name: 'Donut',
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-          iron: '22%',
-        },
-        {
-          name: 'KitKat',
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
-          iron: '6%',
-        },
-      ],
+          {
+            name: 'Frozen Yogurt',
+            calories: 159,
+            fat: 6.0,
+            carbs: 24,
+            protein: 4.0,
+            iron: '1%',
+          },
+          {
+            name: 'Ice cream sandwich',
+            calories: 237,
+            fat: 9.0,
+            carbs: 37,
+            protein: 4.3,
+            iron: '1%',
+          },
+          {
+            name: 'Eclair',
+            calories: 262,
+            fat: 16.0,
+            carbs: 23,
+            protein: 6.0,
+            iron: '7%',
+          },
+          {
+            name: 'Cupcake',
+            calories: 305,
+            fat: 3.7,
+            carbs: 67,
+            protein: 4.3,
+            iron: '8%',
+          },
+          {
+            name: 'Gingerbread',
+            calories: 356,
+            fat: 16.0,
+            carbs: 49,
+            protein: 3.9,
+            iron: '16%',
+          },
+          {
+            name: 'Jelly bean',
+            calories: 375,
+            fat: 0.0,
+            carbs: 94,
+            protein: 0.0,
+            iron: '0%',
+          },
+          {
+            name: 'Lollipop',
+            calories: 392,
+            fat: 0.2,
+            carbs: 98,
+            protein: 0,
+            iron: '2%',
+          },
+          {
+            name: 'Honeycomb',
+            calories: 408,
+            fat: 3.2,
+            carbs: 87,
+            protein: 6.5,
+            iron: '45%',
+          },
+          {
+            name: 'Donut',
+            calories: 452,
+            fat: 25.0,
+            carbs: 51,
+            protein: 4.9,
+            iron: '22%',
+          },
+          {
+            name: 'KitKat',
+            calories: 518,
+            fat: 26.0,
+            carbs: 65,
+            protein: 7,
+            iron: '6%',
+          },
+        ],
     }
   },
   methods:{
-    itemExpanded(e){
-      console.log(JSON.stringify(e))
-    }
-  }
+  sortUser(){
+    alert('data')
+  // this.users = data
+}
+  },
+    async mounted(){
+    const users= await this.$axios.get("https://cornie-assessment.herokuapp.com/users/hMEDdQkPDuyISOz")
+this.paidUsers = users.data.data.filter((user)=> user.paymentStatus === 'paid')
+this.unpaidUsers = users.data.data.filter((user)=> user.paymentStatus === 'unpaid')
+this.users = users.data.data
+this.dueUsers = users.data.data.filter((user)=> user.paymentStatus === 'overdue')
+},
 }
 </script>
+<style scoped>
+.active{
+  background-color: #e6e6f2;
+  color: #6D5BD0
+}
+.inactive{
+  background: #fef0f9;
+  color: #6e6893
+}
+.paid{
+  background: #CDFFCD;
+  color: #007F00
+}
+.overdue{
+  background: #fef0f9;
+  color: #D30000
+}
+.unpaid{
+  background: #FFECCC;
+  color: #CE8500
+}
+
+</style>
