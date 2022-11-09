@@ -330,6 +330,7 @@ export default {
  },
 async markPaid(id){
 await this.$axios.patch(`https://cornie-assessment.herokuapp.com/mark-paid/${id}`)
+window.location.reload()
 
  }
   },
