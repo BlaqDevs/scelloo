@@ -280,6 +280,7 @@ export default {
       paidUsers: [],
       unpaidUsers: [],
       dueUsers: [],
+      notPaid:[],
       singleExpand: true,
       sort: [],
       headers: [
@@ -354,8 +355,9 @@ await this.$axios.patch(`https://cornie-assessment.herokuapp.com/mark-paid/${id}
     this.dueUsers = users.data.data.filter(
       (user) => user.paymentStatus === 'overdue'
     )
-    console.log(users)
-  this.users.forEach(element => {
+    this.notPaid = users.data.data.filter((user)=> user.paymentStatus === 'overdue' || user.paymentStatus ===  'unpaid')
+    
+  this.notPaid.forEach(element => {
     this.totalAmount += element.amountInCents/100
    this.totalAmount = Math.round(this.totalAmount * 100) / 100
   });
