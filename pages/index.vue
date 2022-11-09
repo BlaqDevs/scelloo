@@ -17,19 +17,17 @@
             @click="users = unpaidUsers"
             >Unpaid</v-tab
           >
-          <v-tab
-            class="text-capitalize accent--text"
-            @click="users = dueUsers"
+          <v-tab class="text-capitalize accent--text" @click="users = dueUsers"
             >Overdue</v-tab
           >
           <v-spacer></v-spacer>
           <span>
             Total payable amount:
-            <span class="text-h6 primary--text">${{totalAmount}}</span> USD
+            <span class="text-h6 primary--text">${{ totalAmount }}</span> USD
           </span>
         </v-tabs>
-                <!-- {{selected[selected].id}} -->
-        
+        <!-- {{selected[selected].id}} -->
+
         <v-divider class=""></v-divider>
         <div class="mt-5">
           <!-- <Table ref="table" /> -->
@@ -48,14 +46,12 @@
             item-key="id"
             :sort-by.sync="sort"
             show-expand
+            sort-by-text="sort"
             class="elevation-1"
           >
             <template v-slot:top>
               <v-toolbar flat>
-                <v-menu
-                  offset-y
-                  :close-on-content-click="false"
-                >
+                <v-menu offset-y :close-on-content-click="false">
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn
                       class="text-capitalize"
@@ -74,10 +70,14 @@
                         SORT BY:
                       </v-list-item-title>
                     </v-list-item>
-                    <v-radio-group v-model="sort1" @change="sortBy" class="mt-n2">
+                    <v-radio-group
+                      v-model="sort1"
+                      @change="sortBy"
+                      class="mt-n2"
+                    >
                       <v-list-item class="mt-n5">
                         <label for="">Default</label>
-                        <v-spacer></v-spacer><v-radio value=""></v-radio>
+                        <v-spacer></v-spacer><v-radio value="default"></v-radio>
                       </v-list-item>
                       <v-list-item class="mt-n5">
                         <label for="">First Name</label><v-spacer></v-spacer
@@ -89,18 +89,22 @@
                       </v-list-item>
                       <v-list-item class="mt-n5">
                         <label for="">Due Date</label><v-spacer></v-spacer
-                        ><v-radio value="due-date"> </v-radio>
+                        ><v-radio value="dueDate"> </v-radio>
                       </v-list-item>
                       <v-list-item class="mt-n5">
                         <label for="">Last Login</label><v-spacer></v-spacer
-                        ><v-radio value="last-login"></v-radio>
+                        ><v-radio value="lastLogin"></v-radio>
                       </v-list-item>
                     </v-radio-group>
                     <v-divider class="mt-n5"></v-divider>
                     <v-list-item class="accent--text font-weight-light"
                       >USERS:</v-list-item
                     >
-                    <v-radio-group class="mt-n2" @change="sortBy($event)" v-model="sort2">
+                    <v-radio-group
+                      class="mt-n2"
+                      @change="sortBy($event)"
+                      v-model="sort2"
+                    >
                       <v-list-item class="mt-n5">
                         <label for="">All</label><v-spacer></v-spacer
                         ><v-radio value="all"></v-radio>
@@ -117,44 +121,47 @@
                   </v-list>
                 </v-menu>
 
- <!-- <v-text-field
-            label="Solo"
-            solo
-            dense
-            class="search primary"
-            prepend-inner-icon="mdi-magnify"
-          ></v-text-field> -->
-          <div width="392px">
-
-                <v-text-field background-color="secondary" v-model="search" class="search "   solo dense flat>
-                  <template #prepend-inner>
-                    <v-icon class="" left>mdi-magnify</v-icon>
-                  </template>
-                  <template #label>
-                    <span class="text-caption">
-                      Search Users by Name, Email or Date
-                    </span>
-                  </template>
-                </v-text-field>
-          </div>
+                <div width="392px">
+                  <v-text-field
+                    background-color="secondary"
+                    v-model="search"
+                    class="search"
+                    solo
+                    dense
+                    flat
+                  >
+                    <template #prepend-inner>
+                      <v-icon class="" left>mdi-magnify</v-icon>
+                    </template>
+                    <template #label>
+                      <span class="text-caption">
+                        Search Users by Name, Email or Date
+                      </span>
+                    </template>
+                  </v-text-field>
+                </div>
                 <v-spacer></v-spacer>
-                <v-btn @click='markPaid(selected[0].id)' class="font-weight-bold" color="primary">
+                <v-btn
+                  @click="markPaid(selected[0].id)"
+                  class="font-weight-bold"
+                  color="primary"
+                >
                   Pay Dues
                 </v-btn>
               </v-toolbar>
               <v-divider class=""></v-divider>
             </template>
             <template v-slot:item.firstName="{ item }">
-              {{ item.firstName }} {{ item.lastName }} <br>
-              <span class="text-caption font-weight-light">{{item.email}}</span>
+              {{ item.firstName }} {{ item.lastName }} <br />
+              <span class="text-caption font-weight-light">{{
+                item.email
+              }}</span>
             </template>
-            <template v-slot:item.lastName="{ item }">
-            </template>
-            <template v-slot:item.email="{ item }">
-            </template>
-          
+            <template v-slot:item.lastName="{ item }"> </template>
+            <template v-slot:item.email="{ item }"> </template>
+
             <template v-slot:item.lastLogin="{ item }">
-              <div class="py-3">
+              <div class="py-3 text-capitalize">
                 <v-chip :class="item.userStatus" small :color="item.userStatus">
                   <v-icon large>mdi-circle-small</v-icon>
                   {{ item.userStatus }} </v-chip
@@ -166,18 +173,21 @@
             </template>
             <template v-slot:item.amountInCents="{ item }">
               <div class="py-3">
-                <span class="">${{ item.amountInCents/100 }}</span>
+                <span class="">${{ item.amountInCents / 100 }}</span>
               </div>
             </template>
             <template v-slot:item.paystatus="{ item }">
               <div class="py-3">
                 <v-chip
                   :class="item.paymentStatus"
+                  class="pl-0"
                   small
                   :color="item.paymentStatus"
                 >
-                  <v-icon color="" large>mdi-circle-small</v-icon>
-                  {{ item.paymentStatus }} </v-chip
+                  <v-icon color="" left large>mdi-circle-small</v-icon>
+                  <span class="text-capitalize">{{
+                    item.paymentStatus
+                  }}</span> </v-chip
                 ><br />
                 <span class="text-caption">Paid On: {{ item.paidOn }}</span>
               </div>
@@ -185,18 +195,21 @@
             <template v-slot:item.viewmore="{ item }">
               <div class="py-3">
                 <span class="text-caption">View More</span>
-                {{item.id}}
               </div>
             </template>
             <template v-slot:item.menu="{ item }">
-              <v-menu
-                offset-y
-                :close-on-content-click="false"
-              >
+              <v-menu offset-y :close-on-content-click="false">
                 <template v-slot:activator="{ on, attrs }">
-                  <v-icon v-bind="attrs" v-on="on" color=""
-                    >mdi-dots-vertical</v-icon
-                  >
+                  <v-tooltip right color="white">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-icon v-bind="attrs" v-on="on" color=""
+                        >mdi-dots-vertical</v-icon
+                      >
+                    </template>
+                    <div width="100px" class="black--text"
+                      >You can edit the users here</div
+                    >
+                  </v-tooltip>
                 </template>
                 <v-list class="text-subtitle-1" height="129px" width="154px">
                   <v-list-item class="mt-n2"> Edit </v-list-item>
@@ -258,7 +271,6 @@
               </td>
             </template>
           </v-data-table>
-          
         </div>
       </div>
     </div>
@@ -269,25 +281,26 @@
 export default {
   data() {
     return {
-      search:'',
+      search: '',
       expanded: [],
-      sort1:'default',
-      sort2:'all',
+      sort1: 'default',
+      sort2: 'all',
       singleSelect: false,
       selected: [],
       users: [],
-      totalAmount:0,
+      totalAmount: 0,
       allUsers: [],
       paidUsers: [],
       unpaidUsers: [],
       dueUsers: [],
-      notPaid:[],
+      notPaid: [],
       singleExpand: true,
       sort: [],
       headers: [
         {
           text: '',
           align: 'start',
+          class: 'secondary',
           value: 'data-table-expand',
         },
         {
@@ -295,79 +308,101 @@ export default {
           align: 'start',
           sortable: true,
           filterable: true,
+          class: 'secondary',
           value: 'firstName',
         },
-        { text: 'USER STATUS', align:'start', value: 'lastLogin',  },
+        {
+          text: 'USER STATUS',
+          class: 'secondary',
+          align: 'start',
+          value: 'lastLogin',
+        },
         {
           text: '',
           align: 'start',
           sortable: true,
-          // class:'d-none',
           filterable: true,
+          class: 'secondary',
           value: 'email',
         },
         {
           text: '',
           align: 'start',
-          // class:'d-none',
+          class: 'secondary',
           sortable: true,
           value: 'lastName',
         },
-        { text: 'PAYMENT STATUS',align:'start', value: 'paystatus',  },
-        { text: 'AMOUNT', align: 'center', value: 'amountInCents',},
-        { text: '', value: 'viewmore' },
-        { text: '', value: 'menu' },
+        {
+          text: 'PAYMENT STATUS',
+          align: 'start',
+          class: 'secondary',
+          value: 'paystatus',
+        },
+        {
+          text: 'AMOUNT',
+          align: 'center',
+          class: 'secondary',
+          value: 'amountInCents',
+        },
+        { text: '', value: 'viewmore', class: 'secondary' },
+        { text: '', value: 'menu', class: 'secondary' },
       ],
     }
   },
   methods: {
-    searchTable (value, search, item) {
-        return value != null &&
-          search != null &&
-          typeof value === 'string' && item != null
-      },
+    searchTable(value, search, item) {
+      return (
+        value != null &&
+        search != null &&
+        typeof value === 'string' &&
+        item != null
+      )
+    },
     sortBy() {
-      this.sort=[this.sort2, this.sort1 ]
- },
-async getUsersDetails(){
-const users = await this.$axios.get(
-      'https://cornie-assessment.herokuapp.com/users/hMEDdQkPDuyISOz'
-    )
-    this.paidUsers = users.data.data.filter(
-      (user) => user.paymentStatus === 'paid'
-    )
-    this.unpaidUsers = users.data.data.filter(
-      (user) => user.paymentStatus === 'unpaid'
-    )
-    this.users = users.data.data
-    this.allUsers = users.data.data
-    this.dueUsers = users.data.data.filter(
-      (user) => user.paymentStatus === 'overdue'
-    )
-    this.notPaid = users.data.data.filter((user)=> user.paymentStatus === 'overdue' || user.paymentStatus ===  'unpaid')
-    
-  this.notPaid.forEach(element => {
-    this.totalAmount += element.amountInCents/100
-   this.totalAmount = Math.round(this.totalAmount * 100) / 100
-  });
- },
-async markPaid(id){
-await this.$axios.patch(`https://cornie-assessment.herokuapp.com/mark-paid/${id}`)
-// window.location.reload()
-this.getUsersDetails()
+      this.sort = [this.sort2, this.sort1]
+    },
+    async getUsersDetails() {
+      const users = await this.$axios.get(
+        'https://cornie-assessment.herokuapp.com/users/hMEDdQkPDuyISOz'
+      )
+      this.paidUsers = users.data.data.filter(
+        (user) => user.paymentStatus === 'paid'
+      )
+      this.unpaidUsers = users.data.data.filter(
+        (user) => user.paymentStatus === 'unpaid'
+      )
+      this.users = users.data.data
+      this.allUsers = users.data.data
+      this.dueUsers = users.data.data.filter(
+        (user) => user.paymentStatus === 'overdue'
+      )
+      this.notPaid = users.data.data.filter(
+        (user) =>
+          user.paymentStatus === 'overdue' || user.paymentStatus === 'unpaid'
+      )
 
- }
+      this.notPaid.forEach((element) => {
+        this.totalAmount += element.amountInCents / 100
+        this.totalAmount = Math.round(this.totalAmount * 100) / 100
+      })
+    },
+    async markPaid(id) {
+      await this.$axios.patch(
+        `https://cornie-assessment.herokuapp.com/mark-paid/${id}`
+      )
+      // window.location.reload()
+      this.getUsersDetails()
+    },
   },
-  computed:{
-    filteredTable(){
-      this.users.filter((user) =>{
+  computed: {
+    filteredTable() {
+      this.users.filter((user) => {
         return user.firstName.toLowerCase().includes(this.search.toLowerCase())
       })
-    }
+    },
   },
-   mounted() {
+  mounted() {
     this.getUsersDetails()
-    
   },
 }
 </script>
@@ -392,16 +427,15 @@ this.getUsersDetails()
   background: #ffeccc;
   color: #ce8500;
 }
-.search{
+.search {
   width: 392px;
   height: 40px;
   border-radius: 5px;
-  margin-left: 20px ;
+  margin-left: 20px;
   /* background: url(); */
 }
-.search:hover{
+.search:hover {
   border: 1px solid;
-  border-color: #6d5bd0
+  border-color: #6d5bd0;
 }
-
 </style>
