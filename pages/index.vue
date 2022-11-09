@@ -185,6 +185,7 @@
             <template v-slot:item.viewmore="{ item }">
               <div class="py-3">
                 <span class="text-caption">View More</span>
+                {{item.id}}
               </div>
             </template>
             <template v-slot:item.menu="{ item }">
@@ -328,21 +329,8 @@ export default {
     sortBy() {
       this.sort=[this.sort2, this.sort1 ]
  },
-async markPaid(id){
-await this.$axios.patch(`https://cornie-assessment.herokuapp.com/mark-paid/${id}`)
-window.location.reload()
-
- }
-  },
-  computed:{
-    filteredTable(){
-      this.users.filter((user) =>{
-        return user.firstName.toLowerCase().includes(this.search.toLowerCase())
-      })
-    }
-  },
-  async mounted() {
-    const users = await this.$axios.get(
+async getUsersDetails(){
+const users = await this.$axios.get(
       'https://cornie-assessment.herokuapp.com/users/hMEDdQkPDuyISOz'
     )
     this.paidUsers = users.data.data.filter(
@@ -362,6 +350,23 @@ window.location.reload()
     this.totalAmount += element.amountInCents/100
    this.totalAmount = Math.round(this.totalAmount * 100) / 100
   });
+ },
+async markPaid(id){
+await this.$axios.patch(`https://cornie-assessment.herokuapp.com/mark-paid/${id}`)
+// window.location.reload()
+this.getUsersDetails()
+
+ }
+  },
+  computed:{
+    filteredTable(){
+      this.users.filter((user) =>{
+        return user.firstName.toLowerCase().includes(this.search.toLowerCase())
+      })
+    }
+  },
+   mounted() {
+    this.getUsersDetails()
     
   },
 }
